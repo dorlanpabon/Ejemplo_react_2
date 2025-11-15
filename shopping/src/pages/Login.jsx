@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const { login: setAuthToken } = useAuth()
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -14,14 +17,43 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
+    setError(null)
     try {
-      // Aquí iría tu llamada a API de autenticación
-      await new Promise((r) => setTimeout(r, 600))
-      // Simulación: login OK
-      navigate('/')
+      const myHeaders = new Headers()
+      myHeaders.append('Content-Type', 'application/json')
+
+      const raw = JSON.stringify({ email: form.email, password: form.password })
+
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow',
+      }
+
+      const res = await fetch('http://localhost:3000/login', requestOptions)
+
+      if (res.status === 200) {
+        // Respuesta OK: parseamos JSON y guardamos token si viene
+        const data = await res.json().catch(() => null)
+        if (data && data.token) {
+          setAuthToken(data.token)
+        }
+        navigate('/')
+        return
+      }
+
+      if (res.status === 401) {
+        setError('Correo o contraseña incorrectos')
+        return
+      }
+
+      // Otros códigos de error
+      const text = await res.text().catch(() => '')
+      setError(text || `Error del servidor (${res.status})`)
     } catch (err) {
       console.error('Error en login', err)
-      alert('No se pudo iniciar sesión')
+      setError('No se pudo conectar con el servidor')
     } finally {
       setLoading(false)
     }
@@ -31,6 +63,7 @@ export default function Login() {
     <section className="mx-auto my-8 max-w-md rounded-2xl border bg-white p-6 shadow-sm">
       <h2 className="mb-4 text-center text-2xl font-bold">Iniciar sesión</h2>
       <form onSubmit={handleSubmit} className="space-y-3">
+        {error && <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
         <div>
           <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">Correo</label>
           <input

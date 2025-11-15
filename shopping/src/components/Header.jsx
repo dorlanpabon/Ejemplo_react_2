@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Header() {
   const { count } = useCart()
+  const { isAuthenticated, logout, user } = useAuth()
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-brand text-white">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
@@ -22,8 +24,24 @@ export default function Header() {
 
         {/* Links */}
         <nav className="hidden items-center gap-4 text-sm md:flex">
-          <Link className="hover:underline" to="/register">Crea tu cuenta</Link>
-          <Link className="hover:underline" to="/login">Ingresa</Link>
+          {!isAuthenticated ? (
+            <>
+              <Link className="hover:underline" to="/register">Crea tu cuenta</Link>
+              <Link className="hover:underline" to="/login">Ingresa</Link>
+            </>
+          ) : (
+            <>
+              <Link className="hover:underline" to="/profile">Mi cuenta</Link>
+              <Link className="hover:underline" to="/orders">Mis pedidos</Link>
+              {user && user.role === 'admin' && (
+                <>
+                  <Link className="hover:underline font-semibold" to="/admin/products">Admin productos</Link>
+                  <Link className="hover:underline font-semibold ml-2" to="/admin/orders">Admin pedidos</Link>
+                </>
+              )}
+              <button onClick={logout} className="hover:underline">Cerrar sesión</button>
+            </>
+          )}
           <Link className="hover:underline" to="/cart">Mis compras</Link>
           <Link className="relative font-semibold" to="/cart">
             🛒

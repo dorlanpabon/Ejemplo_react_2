@@ -5,6 +5,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Products from './pages/Products'
 import Cart from './pages/Cart'
+import Orders from './pages/Orders'
+import AdminProducts from './pages/AdminProducts'
+import AdminOrders from './pages/AdminOrders'
 import Header from './components/Header'
 
 export default function App() {
@@ -15,7 +18,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<div style={{ textAlign: 'center' }}>Página no encontrada</div>} />

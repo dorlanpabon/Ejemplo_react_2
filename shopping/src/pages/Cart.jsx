@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
+import { useAuth } from '../contexts/AuthContext'
+import * as api from '../lib/api'
 
 export default function Cart() {
   const { items, update, remove, clear, total } = useCart()
+  const { isAuthenticated } = useAuth()
 
   if (items.length === 0) {
     return (
@@ -59,7 +62,25 @@ export default function Cart() {
       </div>
 
       <div className="mt-3 text-right">
-        <button className="rounded-lg bg-brand px-5 py-2 font-semibold text-white hover:bg-blue-700">Proceder al pago</button>
+        <button
+          className="rounded-lg bg-brand px-5 py-2 font-semibold text-white hover:bg-blue-700"
+          onClick={async () => {
+            if (!isAuthenticated) {
+              alert('Debes iniciar sesión para proceder al pago')
+              return
+            }
+            try {
+              const res = await api.createOrder()
+              alert(`Pedido creado: ${res.orderId}`)
+              clear()
+            } catch (err) {
+              console.error('Error creando pedido', err)
+              alert('No se pudo crear el pedido')
+            }
+          }}
+        >
+          Proceder al pago
+        </button>
       </div>
     </section>
   )
