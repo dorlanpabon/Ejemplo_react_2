@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import * as api from '../lib/api'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -15,13 +16,18 @@ export default function Register() {
     e.preventDefault()
     setLoading(true)
     try {
-      // Aquí iría tu llamada a API de registro
-      await new Promise((r) => setTimeout(r, 800))
-      alert('Cuenta creada, ahora inicia sesión')
-      navigate('/login')
+      const resText = await api.registerUser({ email: form.email, password: form.password })
+      // Backend returns a text message like 'Registration Successful'
+      if (typeof resText === 'string' && /success/i.test(resText)) {
+        alert('Cuenta creada, ahora inicia sesión')
+        navigate('/login')
+      } else {
+        alert(resText || 'Registro completado')
+        navigate('/login')
+      }
     } catch (err) {
       console.error('Error en registro', err)
-      alert('No se pudo registrar')
+      alert(err.message || 'No se pudo registrar')
     } finally {
       setLoading(false)
     }

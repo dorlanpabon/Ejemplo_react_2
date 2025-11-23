@@ -107,3 +107,15 @@ export async function deleteProduct(id) {
   if (!res.ok) throw new Error(`Error deleting product: ${res.status}`)
   return res.json()
 }
+
+// Register a new user (POST /register)
+export async function registerUser({ email, password }) {
+  const res = await fetch(`${BASE}/register`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ email, password }),
+  })
+  const text = await res.text()
+  if (!res.ok) throw new Error(text || `Error registering user: ${res.status}`)
+  return text
+}
