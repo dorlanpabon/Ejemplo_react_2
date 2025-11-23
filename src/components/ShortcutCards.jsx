@@ -11,10 +11,10 @@ const items = [
 
 export default function ShortcutCards() {
   return (
-    <section className="mx-auto -mt-10 max-w-6xl px-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+    <section className="mx-auto -mt-6 max-w-6xl px-4 z-10">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
         {items.map((it) => (
-          <article key={it.title} className="rounded-xl border bg-white p-4 shadow-sm">
+          <article key={it.title} className="rounded-xl border bg-white p-6 shadow-sm">
             <div className="mb-3 h-10 w-10 rounded-lg bg-brand/10 text-brand" />
             <h3 className="font-semibold">{it.title}</h3>
             <p className="mt-1 text-sm text-slate-600">{it.description}</p>
