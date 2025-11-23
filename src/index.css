@@ -12,3 +12,42 @@ body,
 #root {
   height: 100%;
 }
+
+/* Mejora de contraste para controles de formulario (inputs, textarea, selects)
+   Asegura que en modo oscuro o claro los campos sean legibles. */
+input,
+textarea,
+select {
+  background-color: #ffffff;
+  color: #0f172a;
+  /* slate-900 */
+  border-color: #e5e7eb;
+  /* slate-200 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+  /* slate-400 */
+}
+
+@media (prefers-color-scheme: dark) {
+
+  input,
+  textarea,
+  select {
+    background-color: #1f2937;
+    /* slate-800 */
+    color: #f8fafc;
+    /* slate-50 */
+    border-color: #374151;
+    /* slate-700 */
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #94a3b8;
+    /* mantiene contraste */
+    opacity: 0.9;
+  }
+}
